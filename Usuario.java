@@ -9,7 +9,7 @@ import java.util.ArrayList;
  
 /**
  *
- * @author xavie
+ * @author xavier
  */
 public class Usuario {
     public static ArrayList<String> dificultad = new ArrayList<>();
