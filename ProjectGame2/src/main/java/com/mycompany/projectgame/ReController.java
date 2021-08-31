@@ -37,7 +37,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -45,7 +44,7 @@ import javafx.scene.shape.Circle;
 /**
  * FXML Controller class
  *
- * @author xavier
+ * @author xavie
  */
 public class ReController implements Initializable {
 
@@ -66,19 +65,9 @@ public class ReController implements Initializable {
     private int presupuestoInicial;
     
     public static ArrayList <Servicio> servicioList = new ArrayList<>();
-   
-    
-    
-    
-    public static ArrayList <Tile> paneles = new ArrayList<>();
-    
-    public int tiempo = 1;
-    
-    
-    
-    
     @FXML
-    private Button Elegir;
+    private Button Aceptar;
+    private int tiempo;
     
     
     
@@ -90,140 +79,105 @@ public class ReController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        
-        Thread t = new Thread( () -> ConsumirTiempo());
+        registrados.setText(Usuario.user.toString().replace("[", "").replace("]", ""));
+        Tiempo.setText("Tiempo : "+tiempo);
+        leerServicio();
+        Servicios.getItems().addAll(servicioList);
+        cambiarFondo();
+        llenarGrid();
+        Aceptar.setOnAction(t->  agregarValor(Servicios.getValue()));
+        Thread t=new Thread(()-> pasoTemp());
         t.start();
         
         
-        registrados.setText(Usuario.user.toString().replace("[", "").replace("]", ""));
-        
-        leerServicio();
-        
-        Servicios.getItems().addAll(servicioList);
-        
-       
-        
-        llenarGrid();
-        
-        Thread ubicacion = new Thread(() -> ubicacionTenida());
-        
-        ubicacion.start();
-        
-        
-        
-        cambiarFondo();
-        
-        
-        
-        //tocar();
-        
-        
-        
-        
+        //tocar();   
     } 
     
-    
-    public void ConsumirTiempo(){
+    public void agregarValor(Servicio s){
+        String nombre=s.getNombre();
+        String ruta=s.getRuta();
+        int Costomensual=s.getCostoMensual();
+        int Presioconstruccion=s.getPrecioConstruccion();
+        ponerServicio(ruta,Presioconstruccion);
         
         
-       while(App.activo) 
-            {
-                try {
-                    
-                    tiempo+=1;
-                    Platform.runLater(() -> Tiempo.setText("Tiempo "+ tiempo ));  
-                    
-                    
-                    Thread.sleep(100);
-                    
-                    
-                    
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                } 
-            }
+        
     }
-        
-        
-        
-    
-    
-    
-    
-    
-    
-    
     
     public void llenarGrid(){
         
         
         for(int i= 0 ; i<30; i++){
             for(int j = 0 ; j<18;j++){
-                //StackPane qseparado = new StackPane();
-                
-                
-                
-                String editable = i+" "+j;
-                
-                Tile nuevoPane = new Tile(i, j, editable);
-                
-                
-                paneles.add(nuevoPane);
-                
+                StackPane qseparado = new StackPane();
                 InputStream input = App.class.getResourceAsStream("Imagenes/grassTile.png");
                 ImageView piso =new ImageView();
-                piso.setImage(new Image(input,25,30, false, false));
+                piso.setImage(new Image(input,25,30, false, false));;
        
-                int iEditable = i+1;
-                int jEditable  = j+1;
+                int iEditable = i;
+                int jEditable  = j;
+
+                qseparado.getChildren().addAll(piso);
                 
+                Mapa.add(qseparado, i, j);
+
+            }
                 
-                //qseparado.getChildren().addAll(piso);
+        }Mapa.setGridLinesVisible(true);
+    }
+    
+     public void ponerServicio(String ruta,int Presioconstruccion){
+        
+        
+        for(int i= 0 ; i<30; i++){
+            for(int j = 0 ; j<18;j++){
+                StackPane qseparado = new StackPane();
                 
-                nuevoPane.getChildren().addAll(piso);
+       
+                int iEditable = i;
+                int jEditable  = j;
                 
+                cambiar(qseparado,ruta,Presioconstruccion);
+         
+                Mapa.add(qseparado, i, j);
+ 
+            }
                 
-                
-                
-                nuevoPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                 @Override
+        }Mapa.setGridLinesVisible(true);
+    }
+    
+    public void cambiar(StackPane x,String ruta,int Presioconstruccion){
+        
+        x.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        @Override
                  public void handle(MouseEvent mouseEvent) {
                 System.out.println("Group!" + mouseEvent.getSource());
-                
-                
                 
                 ButtonType queen = new ButtonType("Construir");
                 ButtonType rook = new ButtonType("Demoler");
                 Alert a = new Alert(AlertType.NONE, "Elige entre: ", queen, rook);
-                a.setTitle("Hola");
-                a.setHeaderText("My header text");
+                a.setTitle("Primero que nada , Buenos dias");
+                
                 a.setResizable(true);
-                a.setContentText("Content text");
+                a.setContentText("Desea constuir o demoler un servicio?");
                 a.showAndWait().ifPresent(response -> {
                 if (response == queen) {
-                    
-                    
-                    
+             
                     System.out.println("Yeah");
                     Alert b = new Alert(AlertType.INFORMATION);
                     b.setTitle("Va a contruir Yeahh");
                     b.setContentText("Por favor elige un tipo de construccion a lado del panel. ");
                     b.showAndWait();
                     
-                    Elegir.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    Aceptar.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
                     System.out.println("Group!" + mouseEvent.getSource());
-                    
-                    
-                   
-                    
+   
                     Servicio s = Servicios.getValue();
                     
                     String nombre=s.getNombre();
-                        
-                    System.out.println(nombre);
+                        System.out.println(nombre);
                     
                     
                     String ruta=s.getRuta();
@@ -231,72 +185,39 @@ public class ReController implements Initializable {
                     int Presioconstruccion=s.getPrecioConstruccion();
                     
                     
-                    nuevoPane.getChildren().clear();
+                    x.getChildren().clear();
                     InputStream input = App.class.getResourceAsStream(ruta);
                     ImageView piso3 =new ImageView();
                     piso3.setImage(new Image(input,25,30, false, false));
                     
-                    nuevoPane.getChildren().add(piso3);
-                    
-                    
-                    Tile x = paneles.get(iEditable+1);
-                    Tile y = paneles.get(jEditable+1);
-                    
-                    
-                    InputStream owo = App.class.getResourceAsStream("Imagenes/houses/1.png");
-                    ImageView loco =new ImageView();
-                    loco.setImage(new Image(owo,25,30, false, false));
-                    
-                    
-                    
-                    
-                    //casa
-                    x.getChildren().clear(); 
-                    
-                    
-                    x.getChildren().add(loco);
-                    
-                    
-                   
-                    
-                    
-                    y.getChildren().add(loco);
-                    
-                     
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+                    x.getChildren().add(piso3);
+ 
                     
                     }
                     });
-                    
-                    
-                    
+                      
                     
                 } else if (response == rook) {
-                    nuevoPane.getChildren().clear();
+                    x.getChildren().clear();
                     
                     InputStream input = App.class.getResourceAsStream("EXTRAS/gif-muro-07.gif");
                     ImageView pisoUWU =new ImageView();
                     pisoUWU.setImage(new Image(input,25,30, false, false));
                     
-                    nuevoPane.getChildren().add(pisoUWU);
+                    x.getChildren().add(pisoUWU);
                     
                     
                  }
                 });
                 
+                InputStream input = App.class.getResourceAsStream(ruta);
+                ImageView image =new ImageView();
+                image.setImage(new Image(input,25,30, false, false));;
                 
                 
-                
-                
-                
+                x.getChildren().add(image);
+                presupuestoInicial-=Presioconstruccion;
+                presupuesto.setText("Presupuesto: "+presupuestoInicial);
                 
                 
                 //Aqui esta mmda se puede crear un menu dicendo tu servicio a poner 
@@ -304,105 +225,20 @@ public class ReController implements Initializable {
                 }
                 });
                 
-                
-                Mapa.add(nuevoPane, i, j);
-                
-                
-            }
-                
-        }Mapa.setGridLinesVisible(true);
-    }  
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    public void ubicacionTenida(){
-        
-        
-        
-        
-        
-        
-        
         
     }
     
     
-    
-    
-    
-    
-    
-    
-    public void crearServicio(Servicio s,int i,int j){
-        
+    public void crearServicio(MouseEvent event,Servicio s){
+        InputStream input = App.class.getResourceAsStream(s.getRuta());
+        ImageView image =new ImageView();
+        image.setImage(new Image(input,25,30, false, false));;
         
         
        
 
     }
     
-    
-    /*
-     public void tocar(){
-        
-        
-        for(int i= 0 ; i<30; i++){
-            for(int j = 0 ; j<18;j++){
-                StackPane qseparado = new StackPane();
-                
-                int a = i;
-                int b = j;
-                qseparado.setOnMouseClicked(e -> cont(a,b));
-                
-                
-                Mapa.add(qseparado, i, j);
-                
-                
-            }
-                
-        }
-        
-    }
-     
-    
-    public void cont(int columna, int fila){
-        
-        Node x = Grid(Mapa, columna, fila);
-        try {
-            if( x == null){
-            InputStream image = App.class.getResourceAsStream("Imagenes/streer1.png");
-            ImageView piso =new ImageView();
-            piso.setImage(new Image(image, 35, 34, false, false));
-        
-            Mapa.add(piso, columna, fila);
-        }else{
-            
-            InputStream image2 = App.class.getResourceAsStream("EXTRAS/gif-muro-07.gif");
-            ImageView piso2 = new ImageView();
-            piso2.setImage(new Image(image2, 25, 20, false, false));
-            
-            Mapa.add(piso2, columna, fila);
-        }
-            
-        } catch (Exception e) {
-        }
-        
-        
-        
-        
-        
-     
-        
-    }
     private Node Grid(GridPane gridPane, int col, int row) {
     for (Node node : gridPane.getChildren()) {
         if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
@@ -411,10 +247,9 @@ public class ReController implements Initializable {
     }
     return null; 
     }
-    /////    
-        
-      
-    */
+    
+    
+   
    
     public void cambiarFondo(){
         
@@ -489,38 +324,20 @@ public class ReController implements Initializable {
        
     }
     
+    public void pasoTemp(){
+        while(true){
+        
+        try {
+            Platform.runLater(()-> Tiempo.setText("Tiempo : "+tiempo));
+                    Thread.sleep(2000);
+            Thread.sleep(1000);
+            tiempo++;
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+        }
+    }
+    
     
     
 }
-
-class Tile extends Pane {
-        private String panelCreado;
-        private int positionX;
-        private int positionY;
-
-        public Tile(int x, int y, String panel) {
-            positionX = x;
-            positionY = y;
-            panelCreado = panel;
-            
-        }
-
-    public int getPositionX() {
-        return positionX;
-    }
-
-    public int getPositionY() {
-        return positionY;
-    }
-
-    @Override
-    public String toString() {
-        return panelCreado;
-    }
-        
-        
-        
-        
-        
-        
-    }

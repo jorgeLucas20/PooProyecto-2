@@ -29,7 +29,6 @@
                 <version>3.8.0</version>
                 <configuration>
                     <release>11</release>
-                    <debug>false</debug>
                 </configuration>
             </plugin>
             <plugin>
@@ -80,29 +79,29 @@
                 </executions>
             </plugin>
             <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <executions>
-            <execution>
-            <phase>package</phase>
-            <goals>
-            <goal>single</goal>
-            </goals>
-            <configuration>
-            <archive>
-            <manifest>
-            <mainClass>
-            com.mycompany.proyectgame.App;
-            </mainClass>
-            </manifest>
-            </archive>
-            <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-            </descriptorRefs>
-            </configuration>
-            </execution>
-            </executions>
-            </plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-assembly-plugin</artifactId>
+<executions>
+<execution>
+<phase>package</phase>
+<goals>
+<goal>single</goal>
+</goals>
+<configuration>
+<archive>
+<manifest>
+<mainClass>
+com.mycompany.projectgame.Main
+</mainClass>
+</manifest>
+</archive>
+<descriptorRefs>
+<descriptorRef>jar-with-dependencies</descriptorRef>
+</descriptorRefs>
+</configuration>
+</execution>
+</executions>
+</plugin>
         </plugins>
     </build>
 </project>

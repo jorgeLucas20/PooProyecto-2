@@ -19,8 +19,6 @@ import java.util.List;
  */
 public class Servicio {
     
-    
-    
     private String nombre;
     private String ruta;
     private int precioConstruccion;

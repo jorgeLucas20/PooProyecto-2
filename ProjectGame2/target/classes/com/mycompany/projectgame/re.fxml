@@ -90,6 +90,6 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="Elegir" layoutX="794.0" layoutY="166.0" mnemonicParsing="false" text="Elegir" />
+      <Button fx:id="Aceptar" layoutX="803.0" layoutY="146.0" mnemonicParsing="false" text="Aceptar" />
    </children>
 </AnchorPane>
