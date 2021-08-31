@@ -1,0 +1,4 @@
+nombre;valorAlumbradoPublico;valorAgua;impuestoSueloMensual;RutaImagen;RutaImagen2
+Residencial;50;50;50;ruta;rutaOpcionalModeloResidencia2
+Comercial;100,100,90;ruta;rutaOpcionalModeloComercio2
+Industrial;150;150;70;ruta;rutaOpcionalModeloIndustria2
