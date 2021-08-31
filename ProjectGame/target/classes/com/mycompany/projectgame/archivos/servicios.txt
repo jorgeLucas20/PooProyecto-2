@@ -1,0 +1,8 @@
+nombre;ruta;precioConstruccion;costoMensual;
+ESCUELA;Imagenes/schools/school.png;1500;150
+CALLE HORIZONTAL;Imagenes/street1.png;50;10
+PARQUE;Imagenes/park/park1.png;1500;150
+ELECTRICIDAD;Imagenes/electricity/electricity.png;500;200
+AGUA;Imagenes/water/water.jpg;500;150
+POLICIA;Imagenes/Commercial/commercial1.jpg;700;700
+HOSPITAL;Imagenes/Commercial/commercial2.jpg;1400;800
